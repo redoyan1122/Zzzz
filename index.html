@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bet Real - Redoyans Projects</title>
+<style>
+  /* Dark fade background */
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+    color: #eee;
+  }
+  .container {
+    max-width: 420px;
+    margin: 15px auto;
+    padding: 15px;
+    background: #222;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+  }
+  header {
+    display: flex;
+    justify-content: flex-end;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  header span {
+    background: #004aad;
+    padding: 6px 12px;
+    border-radius: 20px;
+    user-select: none;
+  }
+  h2 {
+    margin: 0 0 8px 0;
+    font-weight: 700;
+    font-size: 22px;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin: 12px 0 4px;
+    font-weight: 600;
+  }
+  select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: #333;
+    color: #eee;
+    box-sizing: border-box;
+  }
+  select option {
+    background: #333;
+    color: #eee;
+  }
+  button {
+    margin-top: 14px;
+    width: 100%;
+    padding: 10px 0;
+    font-weight: 700;
+    font-size: 18px;
+    background-color: #0078d7;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #005ea2;
+  }
+  .profit-display {
+    margin-top: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #66ff66;
+    text-align: center;
+  }
+  .section-divider {
+    height: 2px;
+    background: #004aad;
+    margin: 30px 0 20px;
+    border-radius: 2px;
+  }
+  /* Deposit/Withdraw tabs */
+  .tab-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+  }
+  .tab-buttons button {
+    width: 48%;
+    background-color: #004aad;
+    font-size: 16px;
+    padding: 8px 0;
+  }
+  .tab-buttons button.active {
+    background-color: #00cc44;
+  }
+  /* Deposit/Withdraw content */
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  /* Radio style for payment method */
+  .payment-methods {
+    margin: 8px 0 12px;
+  }
+  .payment-methods label {
+    margin-right: 16px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  /* Admin Panel */
+  #admin-panel {
+    display: none;
+    margin-top: 30px;
+    background: #111;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 0 12px #0066ff;
+  }
+  #admin-panel h3 {
+    margin-top: 0;
+    text-align: center;
+    font-weight: 700;
+    color: #00cc44;
+  }
+  #admin-panel label {
+    font-weight: 600;
+  }
+  #admin-panel input, #admin-panel button {
+    font-size: 16px;
+  }
+  #admin-panel input[type="text"], #admin-panel input[type="number"] {
+    margin-bottom: 12px;
+    background: #222;
+    color: #eee;
+  }
+  #matches-list {
+    margin-top: 15px;
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid #004aad;
+    padding: 8px;
+    border-radius: 6px;
+  }
+  #matches-list div.match-item {
+    background: #222;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    color: #ddd;
+  }
+  #matches-list div.match-item:last-child {
+    margin-bottom: 0;
+  }
+  .match-teams {
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .win-btn {
+    cursor: pointer;
+    padding: 4px 10px;
+    background: #00cc44;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #000;
+    transition: background-color 0.3s ease;
+  }
+  .win-btn:hover {
+    background: #00a32a;
+  }
+  /* R button */
+  #r-button {
+    position: fixed;
+    bottom: 8px;
+    left: 8px;
+    width: 28px;
+    height: 28px;
+    background: #004aad;
+    color: #fff;
+    font-weight: 900;
+    font-size: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 8px #004aad;
+  }
+  /* Password modal */
+  #password-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  #password-modal.active {
+    display: flex;
+  }
+  #password-modal .modal-content {
+    background: #222;
+    padding: 20px 25px;
+    border-radius: 10px;
+    width: 280px;
+    box-sizing: border-box;
+    box-shadow: 0 0 12px #00cc44;
+    text-align: center;
+  }
+  #password-modal input {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 12px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: #333;
+    color: #eee;
+  }
+  #password-modal button {
+    width: 100%;
+    padding: 10px 0;
+    font-weight: 700;
+    font-size: 18px;
+    background: #00cc44;
+    border: none;
+    border-radius: 6px;
+    color: #000;
+    cursor: pointer;
+  }
+  #password-error {
+    color: #ff4444;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  /* Scrollbar for matches list */
+  #matches-list::-webkit-scrollbar {
+    width: 8px;
+  }
+  #matches-list::-webkit-scrollbar-thumb {
+    background-color: #004aad;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="user-panel">
+  <header>
+    <span>Balance: <span id="user-balance">0</span> BDT</span>
+  </header>
+
+  <h2>ম্যাচ সিলেক্ট করুন</h2>
+
+  <label for="match-select">ম্যাচ:</label>
+  <select id="match-select">
+    <option value="">ম্যাচ সিলেক্ট করুন</option>
+  </select>
+
+  <div id="teams-container" style="display:none;">
+    <label>টিম ১:</label>
+    <button id="team1-btn" style="width:48%; margin-right:4%; padding:8px; font-weight:700; background:#004aad; border:none; border-radius:6px; color:#fff; cursor:pointer;">Team 1</button>
+
+    <label>টিম ২:</label>
+    <button id="team2-btn" style="width:48%; padding:8px; font-weight:700; background:#004aad; border:none; border-radius:6px; color:#fff; cursor:pointer;">Team 2</button>
+  </div>
+
+  <div class="profit-display" id="profit-display" style="display:none;"></div>
+
+  <label for="bet-amount">বেড এমাউন্ট লিখুন:</label>
+  <input type="number" id="bet-amount" min="1" placeholder="বেড এমাউন্ট লিখুন" />
+
+  <button id="bet-confirm-btn">বেড কনফার্ম করুন</button>
+
+  <div class="section-divider"></div>
+
+  <h2>Wallet</h2>
+
+  <div class="tab-buttons">
+    <button id="deposit-tab" class="active">Deposit</button>
+    <button id="withdraw-tab">Withdraw</button>
+  </div>
+
+  <div id="deposit-content" class="tab-content active">
+    <label>পেমেন্ট মেথড সিলেক্ট করুন:</label>
+    <div class="payment-methods">
+      <label><input type="radio" name="deposit-method" value="bKash" checked /> bKash</label>
+      <label><input type="radio" name="deposit-method" value="Nagad" /> Nagad</label>
+    </div>
+    <label>ট্রানজেকশন আইডি দিন:</label>
+    <input type="text" id="deposit-txid" placeholder="ট্রানজেকশন আইডি লিখুন" />
+    <button id="deposit-submit">ডিপোজিট রিকুয়েস্ট করুন</button>
+  </div>
+
+  <div id="withdraw-content" class="tab-content">
+    <label>পেমেন্ট মেথড সিলেক্ট করুন:</label>
+    <div class="payment-methods">
+      <label><input type="radio" name="withdraw-method" value="bKash" checked /> bKash</label>
+      <label><input type="radio" name="withdraw-method" value="Nagad" /> Nagad</label>
+    </div>
+    <label>ট্রানজেকশন আইডি দিন:</label>
+    <input type="text" id="withdraw-txid" placeholder="ট্রানজেকশন আইডি লিখুন" />
+    <button id="withdraw-submit">উইথড্রো রিকুয়েস্ট করুন</button>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h2>বেড হিস্টোরি</h2>
+  <div id="bet-history" style="max-height: 180px; overflow-y: auto; background:#111; border-radius:6px; padding:10px; color:#ccc; font-size:14px;">
+    কোন বেড নেই।
+  </div>
+</div>
+
+<!-- R Button for Admin -->
+<div id="r-button" title="Admin Panel">R</div>
+
+<!-- Password Modal -->
+<div id="password-modal">
+  <div class="modal-content">
+    <h3>এডমিন লগইন</h3>
+    <div id="password-error"></div>
+    <input type="password" id="admin-password-input" placeholder="পাসওয়ার্ড লিখুন" />
+    <button id="admin-login-btn">লগইন</button>
+  </div>
+</div>
+
+<!-- Admin Panel -->
+<div class="container" id="admin-panel">
+  <h3>এডমিন প্যানেল</h3>
+
+  <label for="match-title">ম্যাচ টাইটেল:</label>
+  <input type="text" id="match-title" placeholder="উদাহরণ: Match 1" />
+
+  <label for="team1-name">টিম ১ নাম:</label>
+  <input type="text" id="team1-name" placeholder="টিম ১" />
+
+  <label for="team1-profit">টিম ১ প্রফিট মাল্টিপ্লায়ার:</label>
+  <input type="number" id="team1-profit" min="0" step="0.01" placeholder="যেমন: 1.5" />
+
+  <label for="team2-name">টিম ২ নাম:</label>
+  <input type="text" id="team2-name" placeholder="টিম ২" />
+
+  <label for="team2-profit">টিম ২ প্রফিট মাল্টিপ্লায়ার:</label>
+  <input type="number" id="team2-profit" min="0" step="0.01" placeholder="যেমন: 1.7" />
+
+  <button id="add-match-btn">ম্যাচ যোগ করুন</button>
+
+  <div id="matches-list">
+    <h4 style="color:#00cc44; margin-top:0;">আপলোডকৃত ম্যাচসমূহ</h4>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>ডিপোজিট/উইথড্রো রিকুয়েস্টসমূহ</h3>
+  <div id="deposit-requests" style="max-height:150px; overflow-y:auto; background:#111; border-radius:6px; padding:10px; color:#ccc; font-size:14px;">
+    কোন ডিপোজিট রিকুয়েস্ট নেই।
+  </div>
+  <div id="withdraw-requests" style="max-height:150px; overflow-y:auto; background:#111; border-radius:6px; padding:10px; color:#ccc; font-size:14px;">
+    কোন উইথড্রো রিকুয়েস্ট নেই।
+  </div>
+
+</div>
+
+<script>
+  // Initial User Data
+  let userBalance = 1000;
+  let matches = [];
+  let bets = [];
+  let depositRequests = [];
+  let withdrawRequests = [];
+
+  // Elements
+  const userBalanceEl = document.getElementById('user-balance');
+  const matchSelect = document.getElementById('match-select');
+  const teamsContainer = document.getElementById('teams-container');
+  const team1Btn = document.getElementById('team1-btn');
+  const team2Btn = document.getElementById('team2-btn');
+  const profitDisplay = document.getElementById('profit-display');
+  const betAmountInput = document.getElementById('bet-amount');
+  const betConfirmBtn = document.getElementById('bet-confirm-btn');
+  const betHistoryEl = document.getElementById('bet-history');
+
+  const depositTabBtn = document.getElementById('deposit-tab');
+  const withdrawTabBtn = document.getElementById('withdraw-tab');
+  const depositContent = document.getElementById('deposit-content');
+  const withdrawContent = document.getElementById('withdraw-content');
+
+  const depositSubmitBtn = document.getElementById('deposit-submit');
+  const withdrawSubmitBtn = document.getElementById('withdraw-submit');
+  const depositTxidInput = document.getElementById('deposit-txid');
+  const withdrawTxidInput = document.getElementById('withdraw-txid');
+
+  const rButton = document.getElementById('r-button');
+  const passwordModal = document.getElementById('password-modal');
+  const adminLoginBtn = document.getElementById('admin-login-btn');
+  const adminPasswordInput = document.getElementById('admin-password-input');
+  const passwordError = document.getElementById('password-error');
+  const adminPanel = document.getElementById('admin-panel');
+
+  const matchTitleInput = document.getElementById('match-title');
+  const team1NameInput = document.getElementById('team1-name');
+  const team1ProfitInput = document.getElementById('team1-profit');
+  const team2NameInput = document.getElementById('team2-name');
+  const team2ProfitInput = document.getElementById('team2-profit');
+  const addMatchBtn = document.getElementById('add-match-btn');
+
+  const matchesList = document.getElementById('matches-list');
+
+  const depositRequestsEl = document.getElementById('deposit-requests');
+  const withdrawRequestsEl = document.getElementById('withdraw-requests');
+
+  // Utility: update balance display
+  function updateBalance() {
+    userBalanceEl.textContent = userBalance.toFixed(2);
+  }
+
+  // Utility: render matches in select dropdown (user side)
+  function renderMatchesSelect() {
+    matchSelect.innerHTML = '<option value="">ম্যাচ সিলেক্ট করুন</option>';
+    matches.forEach((m, i) => {
+      matchSelect.innerHTML += `<option value="${i}">${m.title}</option>`;
+    });
+  }
+
+  // Utility: render matches list (admin side)
+  function renderMatchesList() {
+    if(matches.length === 0) {
+      matchesList.innerHTML = '<h4 style="color:#00cc44; margin-top:0;">আপলোডকৃত ম্যাচসমূহ</h4><p>কোনো ম্যাচ নেই।</p>';
+      return;
+    }
+    let html = '<h4 style="color:#00cc44; margin-top:0;">আপলোডকৃত ম্যাচসমূহ</h4>';
+    matches.forEach((m, idx) => {
+      html += `
+      <div class="match-item" data-index="${idx}">
+        <div class="match-teams">${m.team1.name} vs ${m.team2.name}</div>
+        <div>
+          <button class="win-btn" data-team="1">WIN - ${m.team1.name}</button>
+          <button class="win-btn" data-team="2">WIN - ${m.team2.name}</button>
+        </div>
+        <div style="margin-top:6px; color:#ccc;">Result: <strong>${m.winner ? (m.winner === 1 ? m.team1.name : m.team2.name) : 'Pending'}</strong></div>
+      </div>`;
+    });
+    matchesList.innerHTML = html;
+
+    // Add listeners for WIN buttons
+    const winBtns = matchesList.querySelectorAll('.win-btn');
+    winBtns.forEach(btn => {
+      btn.onclick = () => {
+        const parent = btn.closest('.match-item');
+        const index = parseInt(parent.getAttribute('data-index'));
+        const teamNum = parseInt(btn.getAttribute('data-team'));
+        matches[index].winner = teamNum;
+        resolveBets(index, teamNum);
+        renderMatchesList();
+        alert(`ম্যাচের বিজয়ী ঘোষণা করা হল: ${teamNum === 1 ? matches[index].team1.name : matches[index].team2.name}`);
+      };
+    });
+  }
+
+  // When admin declares winner, resolve bets and update user balance accordingly
+  function resolveBets(matchIndex, winnerTeam) {
+    let betWonCount = 0;
+    bets.forEach(bet => {
+      if(bet.matchIndex === matchIndex && !bet.resolved) {
+        bet.resolved = true;
+        if(bet.teamSelected === winnerTeam) {
+          const profit = bet.amount * (winnerTeam === 1 ? matches[matchIndex].team1.profit : matches[matchIndex].team2.profit);
+          userBalance += profit;
+          bet.status = 'Won';
+          betWonCount++;
+        } else {
+          bet.status = 'Lost';
+        }
+      }
+    });
+    updateBalance();
+    if(betWonCount > 0) {
+      alert(`ম্যাচের বিজয়ীর জন্য ${betWonCount} টি বেড জিতে গেছে। ব্যালেন্স আপডেট হয়েছে।`);
+    }
+    renderBetHistory();
+  }
+
+  // Render bet history
+  function renderBetHistory() {
+    if(bets.length === 0) {
+      betHistoryEl.innerHTML = 'কোন বেড নেই।';
+      return;
+    }
+    let html = '';
+    bets.slice().reverse().forEach(bet => {
+      let match = matches[bet.matchIndex];
+      let statusColor = bet.status === 'Won' ? '#66ff66' : (bet.status === 'Lost' ? '#ff4444' : '#aaa');
+      html += `<div style="margin-bottom:8px;">
+        <strong>${match.title}</strong> — ${bet.teamSelected === 1 ? match.team1.name : match.team2.name} — ${bet.amount.toFixed(2)} BDT — <span style="color:${statusColor};">${bet.status || 'Pending'}</span>
+      </div>`;
+    });
+    betHistoryEl.innerHTML = html;
+  }
+
+  // When user selects match, show teams and reset bet selection
+  matchSelect.onchange = () => {
+    const idx = parseInt(matchSelect.value);
+    if(isNaN(idx)) {
+      teamsContainer.style.display = 'none';
+      profitDisplay.textContent = 'Profit: -';
+      betConfirmBtn.disabled = true;
+      betAmountInput.value = '';
+      return;
+    }
+    teamsContainer.style.display = 'flex';
+    const match = matches[idx];
+    team1Btn.textContent = `${match.team1.name} (x${match.team1.profit})`;
+    team2Btn.textContent = `${match.team2.name} (x${match.team2.profit})`;
+    selectedTeam = null;
+    profitDisplay.textContent = 'Profit: -';
+    betConfirmBtn.disabled = true;
+    betAmountInput.value = '';
+  };
+
+  let selectedTeam = null;
+
+  // Team selection buttons
+  team1Btn.onclick = () => {
+    selectedTeam = 1;
+    updateProfitDisplay();
+    betConfirmBtn.disabled = betAmountInput.value === '' || isNaN(betAmountInput.value) || parseFloat(betAmountInput.value) < 5;
+  };
+  team2Btn.onclick = () => {
+    selectedTeam = 2;
+    updateProfitDisplay();
+    betConfirmBtn.disabled = betAmountInput.value === '' || isNaN(betAmountInput.value) || parseFloat(betAmountInput.value) < 5;
+  };
+
+  // Update profit display based on selected team and bet amount
+  function updateProfitDisplay() {
+    const idx = parseInt(matchSelect.value);
+    if(isNaN(idx) || selectedTeam === null) {
+      profitDisplay.textContent = 'Profit: -';
+      return;
+    }
+    const amount = parseFloat(betAmountInput.value);
+    if(isNaN(amount) || amount < 5) {
+      profitDisplay.textContent = 'Profit: -';
+      return;
+    }
+    const profitMultiplier = selectedTeam === 1 ? matches[idx].team1.profit : matches[idx].team2.profit;
+    const profit = amount * profitMultiplier;
+    profitDisplay.textContent = `Profit: ${profit.toFixed(2)} BDT`;
+  }
+
+  // Enable/disable bet confirm button based on input
+  betAmountInput.oninput = () => {
+    betConfirmBtn.disabled = selectedTeam === null || betAmountInput.value === '' || isNaN(betAmountInput.value) || parseFloat(betAmountInput.value) < 5 || parseFloat(betAmountInput.value) > userBalance;
+    updateProfitDisplay();
+  };
+
+  // Confirm bet button click
+  betConfirmBtn.onclick = () => {
+    const idx = parseInt(matchSelect.value);
+    const amount = parseFloat(betAmountInput.value);
+    if(isNaN(idx) || selectedTeam === null || isNaN(amount)) return;
+
+    if(amount > userBalance) {
+      alert('আপনার ব্যালেন্স যথেষ্ট নেই।');
+      return;
+    }
+    // Deduct balance
+    userBalance -= amount;
+    updateBalance();
+
+    // Save bet
+    bets.push({
+      matchIndex: idx,
+      teamSelected: selectedTeam,
+      amount: amount,
+      status: null,
+      resolved: false
+    });
+    alert('বেড সফলভাবে রেকর্ড করা হয়েছে।');
+    renderBetHistory();
+
+    // Reset inputs
+    betAmountInput.value = '';
+    betConfirmBtn.disabled = true;
+    profitDisplay.textContent = 'Profit: -';
+  };
+
+  // Deposit and Withdraw Tabs Toggle
+  depositTabBtn.onclick = () => {
+    depositTabBtn.classList.add('active');
+    withdrawTabBtn.classList.remove('active');
+    depositContent.classList.add('active');
+    withdrawContent.classList.remove('active');
+  };
+  withdrawTabBtn.onclick = () => {
+    withdrawTabBtn.classList.add('active');
+    depositTabBtn.classList.remove('active');
+    withdrawContent.classList.add('active');
+    depositContent.classList.remove('active');
+  };
+
+  // Deposit submit
+  depositSubmitBtn.onclick = () => {
+    const method = document.querySelector('input[name="deposit-method"]:checked').value;
+    const txid = depositTxidInput.value.trim();
+    if(txid === '') {
+      alert('অনুগ্রহ করে ট্রানজেকশন আইডি লিখুন।');
+      return;
+    }
+    depositRequests.push({ method, txid, status: 'Pending' });
+    alert('ডিপোজিট রিকুয়েস্ট পাঠানো হয়েছে। অ্যাডমিনের অনুমোদনের অপেক্ষায় থাকুন।');
+    depositTxidInput.value = '';
+    renderDepositRequests();
+  };
+
+  // Withdraw submit
+  withdrawSubmitBtn.onclick = () => {
+    const method = document.querySelector('input[name="withdraw-method"]:checked').value;
+    const txid = withdrawTxidInput.value.trim();
+    if(txid === '') {
+      alert('অনুগ্রহ করে ট্রানজেকশন আইডি লিখুন।');
+      return;
+    }
+    withdrawRequests.push({ method, txid, status: 'Pending' });
+    alert('উইথড্রো রিকুয়েস্ট পাঠানো হয়েছে। অ্যাডমিনের অনুমোদনের অপেক্ষায় থাকুন।');
+    withdrawTxidInput.value = '';
+    renderWithdrawRequests();
+  };
+
+  // Render deposit requests in admin panel
+  function renderDepositRequests() {
+    if(depositRequests.length === 0) {
+      depositRequestsEl.innerHTML = 'কোন ডিপোজিট রিকুয়েস্ট নেই।';
+      return;
+    }
+    let html = '';
+    depositRequests.forEach((req, i) => {
+      html += `<div style="margin-bottom:6px;">
+        <strong>${req.method}</strong> - TXID: ${req.txid} - Status: ${req.status}
+      </div>`;
+    });
+    depositRequestsEl.innerHTML = html;
+  }
+
+  // Render withdraw requests in admin panel
+  function renderWithdrawRequests() {
+    if(withdrawRequests.length === 0) {
+      withdrawRequestsEl.innerHTML = 'কোন উইথড্রো রিকুয়েস্ট নেই।';
+      return;
+    }
+    let html = '';
+    withdrawRequests.forEach((req, i) => {
+      html += `<div style="margin-bottom:6px;">
+        <strong>${req.method}</strong> - TXID: ${req.txid} - Status: ${req.status}
+      </div>`;
+    });
+    withdrawRequestsEl.innerHTML = html;
+  }
+
+  // Admin login toggle
+  rButton.onclick = () => {
+    passwordModal.style.display = 'flex';
+    adminPasswordInput.value = '';
+    passwordError.textContent = '';
+  };
+
+  // Admin login button click
+  adminLoginBtn.onclick = () => {
+    const pwd = adminPasswordInput.value;
+    if(pwd === 'rezoan') {
+      passwordModal.style.display = 'none';
+      adminPanel.style.display = 'block';
+      rButton.style.display = 'none';
+      renderMatchesList();
+      renderDepositRequests();
+      renderWithdrawRequests();
+    } else {
+      passwordError.textContent = 'পাসওয়ার্ড ভুল হয়েছে। আবার চেষ্টা করুন।';
+    }
+  };
+
+  // Add match button click
+  addMatchBtn.onclick = () => {
+    const title = matchTitleInput.value.trim();
+    const t1Name = team1NameInput.value.trim();
+    const t1Profit = parseFloat(team1ProfitInput.value);
+    const t2Name = team2NameInput.value.trim();
+    const t2Profit = parseFloat(team2ProfitInput.value);
+
+    if(!title || !t1Name || isNaN(t1Profit) || !t2Name || isNaN(t2Profit)) {
+      alert('অনুগ্রহ করে সমস্ত তথ্য সঠিকভাবে পূরণ করুন।');
+      return;
+    }
+    matches.push({
+      title,
+      team1: { name: t1Name, profit: t1Profit },
+      team2: { name: t2Name, profit: t2Profit },
+      winner: null
+    });
+    renderMatchesList();
+    renderMatchesSelect();
+    alert('ম্যাচ সফলভাবে যোগ করা হয়েছে।');
+
+    // Clear inputs
+    matchTitleInput.value = '';
+    team1NameInput.value = '';
+    team1ProfitInput.value = '';
+    team2NameInput.value = '';
+    team2ProfitInput.value = '';
+  };
+
+  // Initial setup
+  updateBalance();
+  renderMatchesSelect();
+  renderBetHistory();
+</script>
+
+</body>
+</html>
